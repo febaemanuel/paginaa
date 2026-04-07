@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelos de Documentos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4cc9f0;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: var(--dark-color);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-btn:hover {
+      background: var(--secondary-color);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    h1 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-bar {
+      margin-bottom: 40px;
+      position: relative;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .search-input {
+      padding: 12px 20px;
+      padding-left: 45px;
+      border-radius: 50px;
+      border: 2px solid #e9ecef;
+      width: 100%;
+      font-size: 16px;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.3);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+    }
+
+    .modelo-card {
+      background: var(--card-bg);
+      border: none;
+      border-radius: 12px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modelo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+      transition: var(--transition);
+    }
+
+    .modelo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .modelo-card:hover::before {
+      width: 8px;
+    }
+
+    .modelo-card i {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: var(--transition);
+    }
+
+    .modelo-card:hover i {
+      transform: scale(1.1);
+    }
+
+    .modelo-content {
+      flex: 1;
+    }
+
+    .modelo-titulo {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 0 5px 0;
+      color: var(--dark-color);
+    }
+
+    .modelo-desc {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin: 0;
+    }
+
+    .btn-download {
+      margin-left: auto;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 14px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-download:hover {
+      background: var(--secondary-color);
+      transform: scale(1.05);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #6c757d;
+      display: none;
+    }
+
+    .no-results i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #dee2e6;
+    }
+
+    @media (max-width: 768px) {
+      .back-btn {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-bottom: 20px;
+      }
+      
+      .header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      h1 {
+        align-self: center;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <button class="back-btn" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </button>
+      <h1>
+        <i class="fas fa-file-alt"></i> Modelos de Documentos
+      </h1>
+    </div>
+
+    <div class="search-bar">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar modelo...">
+    </div>
+
+    <div class="no-results" id="noResults">
+      <i class="fas fa-file-excel"></i>
+      <h3>Nenhum modelo encontrado</h3>
+      <p>Tente usar termos diferentes na sua busca</p>
+    </div>
+<div class="row g-4" id="modelosContainer">
+  <!-- Modelos em ordem alfabética -->
+  
+  <!-- A -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Acordo - ACO</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1ax73mPqgGuuEXoLy2JTdftYiCIkAYLMN/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Cátalogo - CAT</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/13SC4PDHulYY4vay7rHtrbrK4fSptFm9w/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Código de Ética - COE</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1dFM183QAyVGueeeHr5jFMJ2aOYWMQe-x/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- D -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Diretriz - DIR</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1adnS-9nsTQkrn5yof6ivw6UyrvUZEdz_/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- F -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Fluxo (Horizontal) - FLX</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1l4xMINQMPodMdaIOFfIVtTVWXkF45Aj0/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Fluxo (Vertical) - FLX</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1HW1o3fXuaeEYipb54OqFj0hBxIzrz6-o/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Folha de Rosto</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1-HbDrUGTFr-Xixqidp4bKUXBsZYN9Thd/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Formulário - FOR</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1E8eY17M_9ku8cQ96EcR0u3IoCWyKzrDn/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Formulário (Horizontal) - FOR</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1IMdYBiM6X_82hdRbVj7itluSCXFVuKrc/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Formulário (vertical) - FOR</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1w3UyPtVBHb6B257grEVb-YIXypxYQywZ/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- G -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Guia - GU</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1RTAKHdKCjYz5QVsJouOXSbcnOY39mfgg/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- I -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Informativo - INF</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1-o2C-udYb8Db2vI-crkIWe18HBOzVsXv/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- M -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Macroprocesso - MP</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1nWRS31KqjQIgfPywmHt_ltIV6YdPZXzt/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Manual - MAN</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1W5nALPfhdMBWLoj88p0yLiRtS3ZKF847/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- N -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Norma - NO</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1_L1-MM5qgbG14OMzSqA5dGMvxQCGNvt9/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- P -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Plano - PLA</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/13ZIKjQelxnf0L0gEz7fhObuHRCUH7SxR/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Plano Terapêutico - PLT</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1vyszFhjDuucbbjYEYUTwDi2r5RTWaS03/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Política - POL</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1YN6EpC_loiWDGPB3eiJ8GSUKVB_GXQ_Y/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Procedimento Operacional Padrão - POP</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1ah5S-aRxad2A0cFeBTQHgwred7oW8SPc/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Programa - PRG</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1p_m660TLS7tegA63LXGpeAdD6H_qVQH6/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Protocolo - PRO</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1UPo5kz8ypvsJ6NQR67A8Tj3gnhh_P0N7/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- R -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Regimento Interno - REI</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1iUZ3mzERhyOspPdiv6T6M1fnmfEI_CgM/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- T -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Termo - TER</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/147CuZYQP5A7rnaTmXxqIKHpqmo72Msi-/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Termo de Consentimento Informado - TCI</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1bnS-t2X7_T9VLBtuRVNqj7QfQDfyJ2vm/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <!-- CAPAS (no final) -->
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Capa Amarela</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1yu9rfckgRbrbosjuccWZ37Hyt1_2iWSL/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Capa AZUL</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1ZoHc0RIJrUh_ta24yPIJYRVpH1UyvVld/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 modelo-item">
+    <div class="modelo-card">
+      <i class="fas fa-file-alt"></i>
+      <div class="modelo-content">
+        <h3 class="modelo-titulo">Capa Verde</h3>
+      </div>
+      <a href="https://docs.google.com/document/d/1IntM8EE1efZUdg2e7Obex5QttDmhhFR8/export?format=docx" class="btn btn-download" download>
+        <i class="fas fa-download"></i> Baixar
+      </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+ <script>
+  const searchInput = document.getElementById('searchInput');
+  const items = document.querySelectorAll('.modelo-item');
+  const noResults = document.getElementById('noResults');
+
+  searchInput.addEventListener('input', function() {
+    const search = this.value.toLowerCase();
+    let hasVisibleItems = false;
+    
+    items.forEach(item => {
+      const title = item.querySelector('.modelo-titulo').textContent.toLowerCase();
+      const isVisible = title.includes(search);
+      item.classList.toggle('hidden', !isVisible);
+      
+      if (isVisible) hasVisibleItems = true;
+    });
+    
+    noResults.style.display = hasVisibleItems ? 'none' : 'block';
+  });
+</script>
+
+</body>
+</html>
