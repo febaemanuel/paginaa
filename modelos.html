@@ -304,11 +304,49 @@
     noResults.style.display = hasVisible ? 'none' : 'block';
   }
 
-  async function carregarModelos() {
+  const CACHE_KEY = 'modelos_cache';
+  const CACHE_TTL = 60 * 60 * 1000; // 1 hora em ms
+
+  function getCached() {
     try {
-      const res = await fetch(APPS_SCRIPT_URL);
-      if (!res.ok) throw new Error('Resposta inválida');
-      const modelos = await res.json();
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const { ts, data } = JSON.parse(raw);
+      if (Date.now() - ts > CACHE_TTL) return null;
+      return data;
+    } catch { return null; }
+  }
+
+  function saveCache(data) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch {}
+  }
+
+  async function fetchRemoto() {
+    const res = await fetch(APPS_SCRIPT_URL);
+    if (!res.ok) throw new Error('Resposta inválida');
+    return res.json();
+  }
+
+  async function carregarModelos() {
+    const cached = getCached();
+
+    if (cached) {
+      // Carrega do cache instantaneamente
+      loadingMsg.style.display = 'none';
+      renderCards(cached);
+      searchInput.addEventListener('input', applySearch);
+      // Atualiza cache em background silenciosamente
+      fetchRemoto().then(modelos => {
+        saveCache(modelos);
+        renderCards(modelos);
+      }).catch(() => {});
+      return;
+    }
+
+    // Primeira visita: busca da fonte
+    try {
+      const modelos = await fetchRemoto();
+      saveCache(modelos);
       loadingMsg.style.display = 'none';
       renderCards(modelos);
       searchInput.addEventListener('input', applySearch);
