@@ -262,10 +262,11 @@
 
 <script>
   // ============================================================
-  // CONFIGURAÇÃO: cole aqui o link de publicação CSV da planilha
-  // Arquivo > Compartilhar > Publicar na web > CSV > copiar link
+  // CONFIGURAÇÃO: cole aqui a URL do Apps Script implantado
+  // Extensões > Apps Script > Implantar > Aplicativo da Web
+  // Acesso: "Qualquer pessoa" → copiar URL do exec
   // ============================================================
-  const SHEET_CSV_URL = 'COLE_AQUI_O_LINK_CSV_DA_PLANILHA';
+  const APPS_SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
   // ============================================================
 
   const container = document.getElementById('modelosContainer');
@@ -274,29 +275,8 @@
   const errorMsg = document.getElementById('errorMsg');
   const searchInput = document.getElementById('searchInput');
 
-  function parseCSV(text) {
-    return text.trim().split('\n').slice(1).map(line => {
-      // Suporta campos com vírgula dentro de aspas
-      const cols = [];
-      let current = '';
-      let inQuotes = false;
-      for (let i = 0; i < line.length; i++) {
-        if (line[i] === '"') {
-          inQuotes = !inQuotes;
-        } else if (line[i] === ',' && !inQuotes) {
-          cols.push(current.trim());
-          current = '';
-        } else {
-          current += line[i];
-        }
-      }
-      cols.push(current.trim());
-      return cols;
-    }).filter(cols => cols[0] && cols[1]);
-  }
-
   function renderCards(modelos) {
-    container.innerHTML = modelos.map(([titulo, link]) => `
+    container.innerHTML = modelos.map(({ titulo, link }) => `
       <div class="col-md-6 col-lg-4 modelo-item">
         <div class="modelo-card">
           <i class="fas fa-file-alt"></i>
@@ -326,10 +306,9 @@
 
   async function carregarModelos() {
     try {
-      const res = await fetch(SHEET_CSV_URL);
+      const res = await fetch(APPS_SCRIPT_URL);
       if (!res.ok) throw new Error('Resposta inválida');
-      const text = await res.text();
-      const modelos = parseCSV(text);
+      const modelos = await res.json();
       loadingMsg.style.display = 'none';
       renderCards(modelos);
       searchInput.addEventListener('input', applySearch);
